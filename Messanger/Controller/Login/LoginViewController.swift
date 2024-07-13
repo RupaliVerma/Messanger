@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class LoginViewController: UIViewController {
     @IBOutlet weak var profileImg:UITextField!
@@ -34,7 +35,16 @@ class LoginViewController: UIViewController {
         }
         clearTextfields()
         
-        //firebase login
+        FirebaseAuth.Auth.auth().signIn(withEmail: email, password:password ) { authRegister, error in
+            guard let result = authRegister,error == nil else{
+                print("Error in sign in \(String(describing: error?.localizedDescription))")
+                self.alertUserLoginError()
+                return
+            }
+            let user = result.user
+            print("Logged in user \(user)")
+      
+        }
     }
     
   

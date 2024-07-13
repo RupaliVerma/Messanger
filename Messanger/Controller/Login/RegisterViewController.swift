@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class RegisterViewController: UIViewController {
     @IBOutlet weak var emailFld: UITextField!
@@ -20,6 +21,25 @@ class RegisterViewController: UIViewController {
     }
   
     @IBAction func registerBtnTapped(_ sender: Any) {
+      
+        guard
+            let email = emailFld.text, !email.isEmpty,
+              let name = nameFld.text, !name.isEmpty,
+              let password = passwordField.text, !password.isEmpty else{
+            alertUserRegisterError()
+            return
+        }
+        FirebaseAuth.Auth.auth().createUser(withEmail:email , password: password) { authResult,error in
+            guard let result = authResult,
+                  error == nil else{
+                print("Error in registering")
+                return
+            }
+            let user = result.user
+            print("Created user \(String(describing: result.credential))")
+                    
+        }
+        
         clearTextfields()
         self.dismiss(animated: true)
     }
@@ -27,6 +47,15 @@ class RegisterViewController: UIViewController {
     @IBAction func profileImageTapped(_ sender: UITapGestureRecognizer) {
         presentPhotoActionSheet()
    }
+    
+   func alertUserRegisterError(){
+    let alert = UIAlertController(title: "Woops!!!!",
+                                  message: "Please Enter all the information to log In",
+                                  preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "Dissmiss", style: .cancel, handler: nil))
+    present(alert, animated: true)
+    
+    }
 }
 
 extension RegisterViewController:UITextFieldDelegate{
