@@ -13,12 +13,10 @@ class RegisterViewController: UIViewController {
     @IBOutlet weak var profileImg: UIImageView!
     @IBOutlet weak var nameFld: UITextField!
     @IBOutlet weak var passwordField: UITextField!
-    let imagePicker = UIImagePickerController()
+   
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Register"
-        view.backgroundColor = .white
-          ()
+        setViewAndDelegates()
     }
   
     @IBAction func registerBtnTapped(_ sender: Any) {
@@ -27,7 +25,7 @@ class RegisterViewController: UIViewController {
     }
     
     @IBAction func profileImageTapped(_ sender: UITapGestureRecognizer) {
-        presentImagePicker()
+        presentPhotoActionSheet()
    }
 }
 
@@ -54,26 +52,37 @@ extension RegisterViewController:UITextFieldDelegate{
         emailFld.text = ""
         passwordField.text = ""
     }
-    private func delegates(){
+    private func setViewAndDelegates(){
+        title = "Register"
+        view.backgroundColor = .white
         nameFld.delegate = self
         emailFld.delegate = self
         passwordField.delegate = self
     }
-    private func presentImagePicker() {
-        imagePicker.delegate = self
-        imagePicker.sourceType = .photoLibrary // Or .camera for capturing photos
-        present(imagePicker, animated: true, completion: nil)
-    }
+    
 }
 
 extension RegisterViewController:UIImagePickerControllerDelegate,UINavigationControllerDelegate{
+    
+    
+    func presentPhotoActionSheet(){
+        let actionsheet = UIAlertController(title: "Profile Picture", message: "HOw would you like to take Picture", preferredStyle: .actionSheet)
+        actionsheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        actionsheet.addAction(UIAlertAction(title: "Take Photo", style: .default,
+                                            handler: { [weak self] _ in
+                                            self?.presentCamera()
+        }))
+        actionsheet.addAction(UIAlertAction(title: "Choose Photo", style: .default,
+                                            handler: { [weak self] _ in
+                                            self?.presentGallery()
+        }))
+        present(actionsheet, animated: true)
+    }
    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-         if let pickedImage = info[.originalImage] as? UIImage {
-            // You now have the selected or captured image (pickedImage).
-            // You can use it as needed within your app.
+        if let pickedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
              profileImg.image = pickedImage
-             profileImg.backgroundColor = .darkGray
+           
         }
         dismiss(animated: true, completion: nil)
     }
@@ -82,5 +91,28 @@ extension RegisterViewController:UIImagePickerControllerDelegate,UINavigationCon
         // Handle the user canceling the image picker, if needed.
         dismiss(animated: true, completion: nil)
     }
-    
+    func presentCamera(){
+        if !UIImagePickerController.isSourceTypeAvailable(.camera) {
+            let alertController = UIAlertController(title: nil, message: "Device has no camera.", preferredStyle: .alert)
+            
+            let okAction = UIAlertAction(title: "Alright", style: .default, handler: { (alert: UIAlertAction!) in
+            })
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+        } else {
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = .camera// for capturing photos
+            imagePicker.allowsEditing = true
+            present(imagePicker, animated: true, completion: nil)
+        }
+        
+    }
+    func presentGallery(){
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.allowsEditing = true
+        present(imagePicker, animated: true, completion: nil)
+    }
 }
