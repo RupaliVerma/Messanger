@@ -1,0 +1,5 @@
+ extern const unsigned char Pods_MessangerVersionString[];
+ extern const double Pods_MessangerVersionNumber;
+
+ const unsigned char Pods_MessangerVersionString[] __attribute__ ((used)) = "@(#)PROGRAM:Pods_Messanger  PROJECT:Pods-1" "\n";
+ const double Pods_MessangerVersionNumber __attribute__ ((used)) = (double)1.;
