@@ -20,6 +20,9 @@
 		84C1D4F12C41A297002DD751 /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C1D4F02C41A297002DD751 /* NewConversationViewController.swift */; };
 		84C1D4F32C41A2AF002DD751 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C1D4F22C41A2AF002DD751 /* ProfileViewController.swift */; };
 		84C1D4F82C42EDA2002DD751 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84C1D4F72C42EDA2002DD751 /* GoogleService-Info.plist */; };
+		84E0EBFF2C4BE64B0012CDF3 /* DataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E0EBFE2C4BE64B0012CDF3 /* DataBaseManager.swift */; };
+		84E0EC012C4C15160012CDF3 /* ChatAppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E0EC002C4C15160012CDF3 /* ChatAppUser.swift */; };
+		84E0EC062C4C34C40012CDF3 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E0EC052C4C34C40012CDF3 /* Helper.swift */; };
 		84EAA78B2C42FAE30095F9CA /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84EAA78A2C42FAE30095F9CA /* AdSupport.framework */; };
 		84EAA78C2C42FAFB0095F9CA /* Pods_Messanger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D56FACAB98DC8AE13292D25 /* Pods_Messanger.framework */; };
 		84EAA78D2C42FAFB0095F9CA /* Pods_Messanger.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7D56FACAB98DC8AE13292D25 /* Pods_Messanger.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -58,6 +61,9 @@
 		84C1D4F02C41A297002DD751 /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		84C1D4F22C41A2AF002DD751 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		84C1D4F72C42EDA2002DD751 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		84E0EBFE2C4BE64B0012CDF3 /* DataBaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManager.swift; sourceTree = "<group>"; };
+		84E0EC002C4C15160012CDF3 /* ChatAppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAppUser.swift; sourceTree = "<group>"; };
+		84E0EC052C4C34C40012CDF3 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		84EAA78A2C42FAE30095F9CA /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -113,7 +119,9 @@
 		84C1D4CC2C419C96002DD751 /* Messanger */ = {
 			isa = PBXGroup;
 			children = (
+				84E0EC022C4C34780012CDF3 /* Helper */,
 				84C1D4F72C42EDA2002DD751 /* GoogleService-Info.plist */,
+				84E0EBFD2C4BE5FC0012CDF3 /* DataBaseManager */,
 				84C1D4E62C419FBA002DD751 /* Resources */,
 				84C1D4E52C419F64002DD751 /* ViewModels */,
 				84C1D4E42C419F5E002DD751 /* Models */,
@@ -149,6 +157,7 @@
 		84C1D4E42C419F5E002DD751 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				84E0EC002C4C15160012CDF3 /* ChatAppUser.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -185,6 +194,22 @@
 				84C1D4EC2C41A250002DD751 /* RegisterViewController.swift */,
 			);
 			path = Login;
+			sourceTree = "<group>";
+		};
+		84E0EBFD2C4BE5FC0012CDF3 /* DataBaseManager */ = {
+			isa = PBXGroup;
+			children = (
+				84E0EBFE2C4BE64B0012CDF3 /* DataBaseManager.swift */,
+			);
+			path = DataBaseManager;
+			sourceTree = "<group>";
+		};
+		84E0EC022C4C34780012CDF3 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				84E0EC052C4C34C40012CDF3 /* Helper.swift */,
+			);
+			path = Helper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -305,9 +330,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				84C1D4E92C41A214002DD751 /* LoginViewController.swift in Sources */,
+				84E0EC062C4C34C40012CDF3 /* Helper.swift in Sources */,
 				84C1D4D22C419C97002DD751 /* ConversationViewController.swift in Sources */,
 				84C1D4F12C41A297002DD751 /* NewConversationViewController.swift in Sources */,
 				84C1D4EB2C41A238002DD751 /* PhotoViewerViewController.swift in Sources */,
+				84E0EBFF2C4BE64B0012CDF3 /* DataBaseManager.swift in Sources */,
+				84E0EC012C4C15160012CDF3 /* ChatAppUser.swift in Sources */,
 				84C1D4EF2C41A26B002DD751 /* VideoPlayerViewController.swift in Sources */,
 				84C1D4ED2C41A250002DD751 /* RegisterViewController.swift in Sources */,
 				84C1D4F32C41A2AF002DD751 /* ProfileViewController.swift in Sources */,

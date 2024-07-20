@@ -26,53 +26,31 @@ class RegisterViewController: UIViewController {
             let email = emailFld.text, !email.isEmpty,
               let name = nameFld.text, !name.isEmpty,
               let password = passwordField.text, !password.isEmpty else{
-            alertUserRegisterError()
+            //let alert = AlertView.shared.showAlertBox(title: "Alert!!", message: "No Field should be empty")
+            alertUserRegisterError("No Field should be empty")
             return
         }
-        FirebaseAuth.Auth.auth().createUser(withEmail:email , password: password) { authResult,error in
-            guard let result = authResult,
-                  error == nil else{
-                print("Error in registering")
-                return
-            }
-            let user = result.user
-            print("Created user \(String(describing: result.credential))")
-                    
+        if password.count<6{
+            alertUserRegisterError("Password should Be atleast 6 characters!!!!")
+            return
         }
-        
-        clearTextfields()
-        self.dismiss(animated: true)
+        firebaseLogin(email: email, password: password)
     }
+  
     
     @IBAction func profileImageTapped(_ sender: UITapGestureRecognizer) {
         presentPhotoActionSheet()
    }
     
-   func alertUserRegisterError(){
-    let alert = UIAlertController(title: "Woops!!!!",
-                                  message: "Please Enter all the information to log In",
-                                  preferredStyle: .alert)
-    alert.addAction(UIAlertAction(title: "Dissmiss", style: .cancel, handler: nil))
-    present(alert, animated: true)
-    
+     private func alertUserRegisterError(_ message:String){
+        let alert = UIAlertController(title: "Woops!!!!",
+                                      message: message,
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+        present(alert, animated: true)
+        
     }
-}
 
-extension RegisterViewController:UITextFieldDelegate{
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == nameFld{
-            emailFld.becomeFirstResponder()
-        }else
-        if textField == emailFld{
-            passwordField.becomeFirstResponder()
-        }else
-        if textField == passwordField{
-            registerBtnTapped((Any).self)
-        }
-        return true
-    }
-    
-    
    private func clearTextfields(){
         nameFld.resignFirstResponder()
         emailFld.resignFirstResponder()
@@ -82,6 +60,8 @@ extension RegisterViewController:UITextFieldDelegate{
         passwordField.text = ""
     }
     private func setViewAndDelegates(){
+       
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(didTapBack))
         title = "Register"
         view.backgroundColor = .white
         nameFld.delegate = self
@@ -89,7 +69,70 @@ extension RegisterViewController:UITextFieldDelegate{
         passwordField.delegate = self
     }
     
+    @objc private func didTapBack(){
+        self.dismiss(animated: true)
+     }
+    
+    
+    
+    // firebase LogIn
+
+    private func firebaseLogin(email:String,password:String){
+        
+        DataBaseManager.shared.validateNewUser(with: email) { exists in
+            guard !exists else{
+                print("User already Exists!!!!")
+                self.alertUserRegisterError("User already Exists!!!!")
+                return
+            }
+            FirebaseAuth.Auth.auth().createUser(withEmail:email , password: password) { [weak self] authResult,error in
+                //            guard let strongSelf = self else{
+                //                return
+                //            }
+                guard let result = authResult,
+                      error == nil else{
+                    print("Error in registering")
+                    self?.alertUserRegisterError("Error in Registering!!")
+                    return
+                }
+                let user = result.user
+                print("Created user \(String(describing: user))")
+                self?.firebaseSignIn(email: email, password: password)
+                self?.dismiss(animated: true)
+            }
+            
+        }
+    }
+    
+    
+    private func firebaseSignIn(email:String,password:String){
+             
+             FirebaseAuth.Auth.auth().signIn(withEmail: email, password:password ) { [weak self] authRegister, error in
+                 guard let strongSelf = self else{
+                     return
+                 }
+                 guard let result = authRegister,error == nil else{
+                     print("Error in sign in \(String(describing: error?.localizedDescription))")
+                     self?.alertUserRegisterError("No Field should be empty")
+                     return
+                 }
+                 let user = result.user
+                 print("Logged in user \(user)")
+                 strongSelf.dismiss(animated: true)
+             }
+         }
+         
+
+    
+    
+    
+    
+    
+    
 }
+    
+    
+// MARK: UIImagePicker extension
 
 extension RegisterViewController:UIImagePickerControllerDelegate,UINavigationControllerDelegate{
     
@@ -144,4 +187,22 @@ extension RegisterViewController:UIImagePickerControllerDelegate,UINavigationCon
         imagePicker.allowsEditing = true
         present(imagePicker, animated: true, completion: nil)
     }
+}
+// MARK: Textfield extension
+
+extension RegisterViewController:UITextFieldDelegate{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == nameFld{
+            emailFld.becomeFirstResponder()
+        }else
+        if textField == emailFld{
+            passwordField.becomeFirstResponder()
+        }else
+        if textField == passwordField{
+            registerBtnTapped((Any).self)
+        }
+        return true
+    }
+    
+    
 }

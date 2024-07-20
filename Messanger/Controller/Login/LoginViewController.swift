@@ -17,12 +17,17 @@ class LoginViewController: UIViewController {
         setView()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        validatAuth()
+    }
+    
    @objc private func didTapRegister(){
        
        let vc = self.storyboard?.instantiateViewController(withIdentifier: "RegisterViewController") as! RegisterViewController
        let nav = UINavigationController(rootViewController: vc)
        vc.title = "Create Account"
-       nav.modalPresentationStyle = .popover
+       nav.modalPresentationStyle = .fullScreen
        present(nav, animated: true)
     }
     
@@ -34,18 +39,22 @@ class LoginViewController: UIViewController {
             return
         }
         clearTextfields()
-        
-        FirebaseAuth.Auth.auth().signIn(withEmail: email, password:password ) { authRegister, error in
+        FirebaseAuth.Auth.auth().signIn(withEmail: email, password:password ) { [weak self] authRegister, error in
+            guard let strongSelf = self else{
+                return
+            }
             guard let result = authRegister,error == nil else{
                 print("Error in sign in \(String(describing: error?.localizedDescription))")
-                self.alertUserLoginError()
+                self?.alertUserLoginError()
                 return
             }
             let user = result.user
             print("Logged in user \(user)")
-      
+            strongSelf.dismiss(animated: true)
         }
     }
+    
+    
     
   
     
@@ -53,7 +62,7 @@ class LoginViewController: UIViewController {
         let alert = UIAlertController(title: "Woops!!!!",
                                       message: "Please Enter all the information to log In",
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Dissmiss", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
         present(alert, animated: true)
         
     }
@@ -64,6 +73,12 @@ class LoginViewController: UIViewController {
       navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Register", style: .done, target: self, action: #selector(didTapRegister))
       passwordTxtFld.delegate = self
       emailTxtField.delegate = self
+    }
+    
+    private func validatAuth(){
+        if FirebaseAuth.Auth.auth().currentUser != nil{
+            self.dismiss(animated: true)
+        }
     }
 }
 

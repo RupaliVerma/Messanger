@@ -1,0 +1,43 @@
+//
+//  DataBaseManager.swift
+//  Messanger
+//
+//  Created by RUPALI VERMA on 20/07/24.
+//
+
+import Foundation
+import FirebaseDatabase
+
+class DataBaseManager{
+    
+    static let shared = DataBaseManager()
+    
+    private let database = Database.database().reference()
+    
+    
+}
+
+//MARK: - Account Management
+
+extension DataBaseManager {
+    
+    
+    public func validateNewUser(with email:String,
+                                completion:@escaping (Bool) -> ()){
+        
+        database.child(email).observeSingleEvent(of: .value) { snapshot in
+            guard snapshot.value as? String != nil else{
+                completion(false)
+                return
+            }
+            completion(true)
+        }
+    }
+    
+    public func insertUser(with user :ChatAppUser){
+        
+        database.child(user.emailAddress).setValue(["name":user.name])
+    }
+    
+    
+}
