@@ -32,7 +32,6 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func loginBtnTapped(_ sender: Any) {
-          
         guard let email = emailTxtField.text ,let password = passwordTxtFld.text,
               !email.isEmpty ,!password.isEmpty, password.count>=6 else{
             alertUserLoginError()
@@ -50,6 +49,7 @@ class LoginViewController: UIViewController {
             }
             let user = result.user
             print("Logged in user \(user)")
+           
             strongSelf.dismiss(animated: true)
         }
     }
@@ -77,7 +77,7 @@ class LoginViewController: UIViewController {
     
     private func validatAuth(){
         if FirebaseAuth.Auth.auth().currentUser != nil{
-            self.dismiss(animated: true)
+            self.dismiss(animated: false)
         }
     }
 }

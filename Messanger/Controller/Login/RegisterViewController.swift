@@ -34,7 +34,7 @@ class RegisterViewController: UIViewController {
             alertUserRegisterError("Password should Be atleast 6 characters!!!!")
             return
         }
-        firebaseLogin(email: email, password: password)
+        firebaseLogin(email: email, password: password,name:name)
     }
   
     
@@ -77,7 +77,7 @@ class RegisterViewController: UIViewController {
     
     // firebase LogIn
 
-    private func firebaseLogin(email:String,password:String){
+    private func firebaseLogin(email:String,password:String,name:String){
         
         DataBaseManager.shared.validateNewUser(with: email) { exists in
             guard !exists else{
@@ -95,10 +95,11 @@ class RegisterViewController: UIViewController {
                     self?.alertUserRegisterError("Error in Registering!!")
                     return
                 }
+                DataBaseManager.shared.insertUser(with: ChatAppUser(emailAddress: email, name: name))
                 let user = result.user
                 print("Created user \(String(describing: user))")
                 self?.firebaseSignIn(email: email, password: password)
-                self?.dismiss(animated: true)
+              
             }
             
         }

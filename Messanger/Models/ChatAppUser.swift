@@ -12,4 +12,12 @@ struct ChatAppUser{
     let name:String
    // let profileImageURL :String
     
+    var safeEmail:String{
+        var safeEmail = emailAddress.replacingOccurrences(of: ".", with: "-")
+        safeEmail = safeEmail.replacingOccurrences(of: "#", with: "-")
+        safeEmail = safeEmail.replacingOccurrences(of: "[", with: "-")
+        safeEmail = safeEmail.replacingOccurrences(of: "]", with: "-")
+        safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
+        return safeEmail
+    }
 }
