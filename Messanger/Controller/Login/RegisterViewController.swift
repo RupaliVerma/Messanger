@@ -7,6 +7,9 @@
 
 import UIKit
 import FirebaseAuth
+import GoogleSignIn
+import FirebaseCore
+import FirebaseAnalytics
 
 class RegisterViewController: UIViewController {
     @IBOutlet weak var emailFld: UITextField!
@@ -37,7 +40,7 @@ class RegisterViewController: UIViewController {
         firebaseLogin(email: email, password: password,name:name)
     }
   
-    
+     
     @IBAction func profileImageTapped(_ sender: UITapGestureRecognizer) {
         presentPhotoActionSheet()
    }
@@ -73,6 +76,38 @@ class RegisterViewController: UIViewController {
         self.dismiss(animated: true)
      }
     
+    @IBAction func clickOnGoogleSignIn(_ sender: Any) {
+        
+        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
+
+        // Create Google Sign In configuration object.
+        let config = GIDConfiguration(clientID: clientID)
+        GIDSignIn.sharedInstance.configuration = config
+
+        // Start the sign in flow!
+        GIDSignIn.sharedInstance.signIn(withPresenting: self) { [unowned self] result, error in
+          guard error == nil else {
+              alertUserRegisterError("Error in Google Sign In")
+            return
+          }
+
+          guard let user = result?.user,
+            let idToken = user.idToken?.tokenString
+          else {
+              alertUserRegisterError("Error in Google Sign In")
+           return
+          }
+
+          let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                         accessToken: user.accessToken.tokenString)
+
+            Auth.auth().signIn(with: credential) { result, error in
+                print("Created user \(String(describing: user))")
+                self.dismiss(animated: true)
+            }
+                
+        }
+    }
     
     
     // firebase LogIn
@@ -86,9 +121,9 @@ class RegisterViewController: UIViewController {
                 return
             }
             FirebaseAuth.Auth.auth().createUser(withEmail:email , password: password) { [weak self] authResult,error in
-                //            guard let strongSelf = self else{
-                //                return
-                //            }
+                            guard let strongSelf = self else{
+                                return
+                            }
                 guard let result = authResult,
                       error == nil else{
                     print("Error in registering")
@@ -99,7 +134,6 @@ class RegisterViewController: UIViewController {
                 let user = result.user
                 print("Created user \(String(describing: user))")
                 self?.firebaseSignIn(email: email, password: password)
-              
             }
             
         }
